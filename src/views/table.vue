@@ -1,6 +1,6 @@
 <template>
     <div class="row">
-        <div v-if="(active == true) ? index < (dich_vu.length - 3) : index < (dich_vu.length)"
+        <div v-if="active ? index < (dich_vu.length - lengthMoRong()) : index < (dich_vu.length)"
             v-for="(item, index) in dich_vu" :key="index">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="block_camdo">
@@ -31,7 +31,6 @@
     </div>
 </template>
 <script>
-
     export default {
         watch: {
             'dich_vu': {
@@ -39,7 +38,7 @@
                     return this.saveState( `dich_vu`, val);
                 },
                 deep: true,
-            }
+            },
         }, // watch
         created(){
             if(localStorage.getItem('dich_vu')){
@@ -125,7 +124,9 @@
                             { key: 'Phân',  value: 0, class: 'luong' },
                             { key: 'Li',    value: 0, class: 'luong' },
                         ]},
-                    {name: '9999', moRong: true,
+                    {
+                        name: '9999',
+                        moRong: true,
                         thuocTinh: [
                             { key: 'Nhẫn',  value: 0, class: 'loai' },
                             { key: 'Kiềng', value: 0, class: 'loai' },
@@ -158,10 +159,15 @@
         },//data
         methods:{
             xlActive(){
-                this.active = !this.active;
+                return this.active = !this.active
             },
-            xuLyMoRong(){
-                return this.moRong == 3 ? this.moRong = 0 : this.moRong = 3 ;
+            lengthMoRong(){
+                let i = 0;
+                this.dich_vu.forEach((key) => {
+                    if(key.moRong)
+                        i++;
+                });
+                return i;
             },
             saveState : (items, state) => {
                     try {
